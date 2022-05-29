@@ -1,0 +1,26 @@
+---
+- name: Check if nss-pam-ldapd installed
+  command: rpm -q nss-pam-ldapd
+  ignore_errors: True
+  register: rpm_check
+
+  
+- name: Creates directory
+  file:
+    path: /opt/rpms
+    state: directory
+  when: (rpm_check.stdout.find('is not installed') != -1)
+
+- name: copy 
+  copy:
+    src: /home/pkgs/openldap/centos/*
+    dest: /opt/rpms
+    owner: root
+    group: root
+    mode: 0755
+  ignore_unreachable: yes
+  when: (rpm_check.stdout.find('is not installed') != -1)
+
+- name: install rpms in centos
+  command: rpm -ivh /opt/rpms/ns*.rpm && rpm rpm --upgrade glibc*.rpm
+  when: (rpm_check.stdout.find('is not installed') != -1)

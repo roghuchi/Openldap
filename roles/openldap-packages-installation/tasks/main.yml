@@ -1,0 +1,8 @@
+---
+- name: packages prompt for RHEL
+  import_tasks: centos-packeges.yml
+  when: ansible_os_family == "RedHat"
+
+- name:  packages for Debian
+  import_tasks: debian-packeges.yml
+  when: ansible_os_family == "Debian"
