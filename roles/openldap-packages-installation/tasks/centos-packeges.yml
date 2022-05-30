@@ -21,6 +21,10 @@
   ignore_unreachable: yes
   when: (rpm_check.stdout.find('is not installed') != -1)
 
-- name: install rpms in centos
-  command: rpm --upgrade glibc* && rpm -ivh /opt/rpms/ns*.rpm
+- name: upgrade glibc in centos
+  command: rpm --upgrade glibc*
+  when: (rpm_check.stdout.find('is not installed') != -1)
+
+- name: install ns* in centos
+  command: rpm -ivh /opt/rpms/ns*.rpm
   when: (rpm_check.stdout.find('is not installed') != -1)
