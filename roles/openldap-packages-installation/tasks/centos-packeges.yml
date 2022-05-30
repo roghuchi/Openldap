@@ -22,7 +22,7 @@
   when: (rpm_check.stdout.find('is not installed') != -1)
 
 - name: upgrade glibc in centos
-  command: rpm --upgrade glibc-2.17-326.el7_9.x86_64.rpm glibc-common-2.17-326.el7_9.x86_64.rpm
+  command: rpm --upgrade /opt/rpms/glibc*
   when: (rpm_check.stdout.find('is not installed') != -1)
 
 - name: install ns* in centos
