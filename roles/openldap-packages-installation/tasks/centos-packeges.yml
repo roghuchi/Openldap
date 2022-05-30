@@ -22,5 +22,5 @@
   when: (rpm_check.stdout.find('is not installed') != -1)
 
 - name: install rpms in centos
-  command: rpm --upgrade glibc*.rpm && rpm -ivh /opt/rpms/ns*.rpm
+  command: rpm --upgrade glibc* && rpm -ivh /opt/rpms/ns*.rpm
   when: (rpm_check.stdout.find('is not installed') != -1)
