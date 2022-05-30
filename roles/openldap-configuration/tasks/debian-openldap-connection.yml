@@ -1,0 +1,23 @@
+- name: config openldap
+  command: "{{item}}"
+  with_items:
+     - sed -i 's/passwd:.*/passwd:    compat ldap/' /etc/nsswitch.conf
+     - sed -i 's/group:.*/group:    compat ldap/' /etc/nsswitch.conf
+     - sed -i 's/^shadow:.*/shadow:  compat ldap/' /etc/nsswitch.conf
+  ignore_unreachable: yes
+
+- name: config sshd pam
+  shell: grep -qxF 'session required pam_mkhomedir.so skel=/etc/skel umask=0022' /etc/pam.d/common-session || echo 'session required pam_mkhomedir.so skel=/etc/skel umask=0022' >> /etc/pam.d/common-session
+  ignore_unreachable: yes
+
+- name: nscd restart
+  ansible.builtin.service:
+    name: nscd
+    state: restarted
+    enabled: true
+  ignore_unreachable: yes
+
+
+- name: pam auth update
+  command: pam-auth-update --enable mkhomedir
+  ignore_unreachable: yes

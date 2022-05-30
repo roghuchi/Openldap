@@ -20,7 +20,7 @@
   ignore_unreachable: yes
   when: (dpkg_check.stdout.find('is not installed') != -1)
 
-- name: Add lines to libnss-ldap bash file
+- name: Add lines to ldap bash file
   lineinfile:
     dest: /opt/debconf-ldap-preseed.txt
     line: "{{ item }}"
@@ -29,10 +29,16 @@
     - "libnss-ldap     shared/ldapns/base-dn   string   {{ basedn }}"
     - "libnss-ldap     libnss-ldap/rootbinddn  string   {{ ldapacc }}"
     - "libnss-ldap     shared/ldapns/ldap_version      select   3"
-    - "libnss-ldap     libnss-ldap/rootbindpw  password   toor"
-    - "libnss-ldap     libnss-ldap/bindpw      password   toor"
+    - "libnss-ldap     libnss-ldap/rootbindpw  password   {{ ldappass }}"
+    - "libnss-ldap     libnss-ldap/bindpw      password   {{ ldappass }}"
     - "libnss-ldap     libnss-ldap/nsswitch    note"
-    
+    - "libpam-ldap    libpam-ldap/dbrootlogin    boolean    true"
+    - "libpam-ldap    libpam-ldap/dblogin    boolean    false"
+    - "libpam-ldap    libpam-ldap/rootbinddn     string  {{ ldapacc }}"
+    - "libpam-ldap    libpam-ldap/rootbindpw     password {{ ldappass }}"
+    - "libpam-ldap    libpam-ldap/override    boolean    true"
+
+
   when: (dpkg_check.stdout.find('is not installed') != -1)
 
 - name: set selections ldap packages
