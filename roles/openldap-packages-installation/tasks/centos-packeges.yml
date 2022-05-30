@@ -13,7 +13,7 @@
 
 - name: copy 
   copy:
-    src: /home/pkgs/openldap/centos/*
+    src: /home/pkgs/openldap/centos/*.rpm
     dest: /opt/rpms
     owner: root
     group: root
