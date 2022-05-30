@@ -1,0 +1,8 @@
+---
+- name: openldap sshkey for RHEL
+  import_tasks: centos-sshkeyauth.yml
+  when: ansible_os_family == "RedHat"
+
+- name:  openldap sshkey for Debian
+  import_tasks: debian-sshkeyauth.yml
+  when: ansible_os_family == "Debian"

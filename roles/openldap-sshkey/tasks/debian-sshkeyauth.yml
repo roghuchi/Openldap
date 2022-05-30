@@ -1,0 +1,29 @@
+---
+- name: create bash file sshkeyquery.sh
+  file:
+    path: "/script/sshkeyquery.sh"
+    state: touch
+    mode: 0755
+  ignore_unreachable: yes
+
+- name: Add lines to sshkeyquery.sh
+  lineinfile:
+    dest: /script/sshkeyquery.sh
+    line: "{{ item }}"
+  with_items:
+    - "#!/bin/bash"
+    - "ldapsearch -x -D \"cn=admin,dc=example,dc=com\" -w \"toor\" -p 389 -h 192.168.56.111 -b \"dc=example,dc=com\" -s sub \"(uid=$1)\" sshPublicKey | sed -n '/^ /{H;d};/sshPublicKey:/x;$g;s/\n *//g;s/sshPublicKey: //gp'"
+
+- name: config sshd
+  command: "{{item}}"
+  with_items:
+     - sed -i 's/#AuthorizedPrincipalsFile.*/AuthorizedPrincipalsFile %h/.ssh/authorized_keys/' /etc/ssh/sshd_config
+     - sed -i 's/#AuthorizedKeysCommand.*/AuthorizedKeysCommand /script/sshkeyquery.sh/' /etc/ssh/sshd_config
+  ignore_unreachable: yes
+
+- name: sshd restart
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+    enabled: true
+  ignore_unreachable: yes
