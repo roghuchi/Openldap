@@ -1,0 +1,27 @@
+- name: config openldap
+  command: "{{item}}"
+  with_items:
+     - authconfig --update --enableldap --enableldapauth --ldapserver={{ openldapserver }} --ldapbasedn={{ basedn }}
+     - sed -i 's/#ldap_version 3/ldap_version 3/' /etc/nslcd.conf
+     - sed -i 's/#binddn .*/binddn {{ ldapacc }}/' /etc/nslcd.conf
+     - sed -i 's/#bindpw .*/bindpw {{ ldappass }}/' /etc/nslcd.conf
+  ignore_unreachable: yes
+
+- name: nslcd restart
+  ansible.builtin.service:
+    name: nslcd
+    state: restarted
+    enabled: true
+
+- name: config sshd pam
+  command: "{{item}}"
+  with_items:
+     - grep -qxF 'session required pam_mkhomedir.so skel=/etc/skel umask=0022' /etc/pam.d/sshd || echo 'session required pam_mkhomedir.so skel=/etc/skel umask=0022' >> /etc/pam.d/sshd
+  ignore_unreachable: yes
+
+- name: sshd restart
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+    enabled: true
+  ignore_unreachable: yes

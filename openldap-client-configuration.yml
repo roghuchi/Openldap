@@ -3,7 +3,7 @@
   become: true
 
   vars:
-    - openldapserver: "ldap://192.168.56.111/"
+    - openldapserver: "192.168.56.111"
     - basedn: "dc=example,dc=com"
     - ldapacc: "cn=admin,dc=example,dc=com"
     - ldappass: "toor"
