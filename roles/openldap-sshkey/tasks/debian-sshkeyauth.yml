@@ -12,13 +12,13 @@
     line: "{{ item }}"
   with_items:
     - "#!/bin/bash"
-    - "ldapsearch -x -D \"cn=admin,dc=example,dc=com\" -w \"toor\" -p 389 -h 192.168.56.111 -b \"dc=example,dc=com\" -s sub \"(uid=$1)\" sshPublicKey | sed -n '/^ /{H;d};/sshPublicKey:/x;$g;s/\n *//g;s/sshPublicKey: //gp'"
+    - "ldapsearch -x -D \"cn=admin,dc=example,dc=com\" -w \"{{ ldappass }}\" -p 389 -h {{ openldapserver }} -b \"{{ basedn }}\" -s sub \"(uid=$1)\" sshPublicKey | sed -n '/^ /{H;d};/sshPublicKey:/x;$g;s/\n *//g;s/sshPublicKey: //gp'"
 
 - name: config sshd
   shell: "{{item}}"
   with_items:
-     - sed -i 's/#AuthorizedPrincipalsFile.*/AuthorizedPrincipalsFile %h/.ssh/authorized_keys/' /etc/ssh/sshd_config
-     - sed -i 's/#AuthorizedKeysCommand.*/AuthorizedKeysCommand /opt/sshkeyquery.sh/' /etc/ssh/sshd_config
+     - "sed -i 's/^#AuthorizedPrincipalsFile.*/AuthorizedPrincipalsFile %h/.ssh/authorized_keys/' /etc/ssh/sshd_config"
+     - "sed -i 's/^#AuthorizedKeysCommand.*/AuthorizedKeysCommand /opt/sshkeyquery.sh/' /etc/ssh/sshd_config"
   ignore_unreachable: yes
 
 - name: sshd restart
