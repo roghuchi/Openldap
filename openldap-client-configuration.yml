@@ -11,3 +11,4 @@
   roles:
     - openldap-packages-installation
     - openldap-configuration
+    - openldap-sshkey

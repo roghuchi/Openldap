@@ -1,5 +1,5 @@
 ---
-- name: packages prompt for RHEL
+- name: packages for RHEL
   import_tasks: centos-packeges.yml
   when: ansible_os_family == "RedHat"
 
