@@ -45,7 +45,7 @@
     chdir: /opt/
     
 - name: debs installation
-  command: dpkg -i *.deb
+  shell: dpkg -i *.deb
   args:
     chdir: /opt/debs/
 
