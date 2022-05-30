@@ -4,7 +4,6 @@
   ignore_errors: True
   register: rpm_check
 
-  
 - name: Creates directory
   file:
     path: /opt/rpms
