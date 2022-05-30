@@ -23,6 +23,7 @@
 
 - name: upgrade glibc in centos
   command: rpm --upgrade /opt/rpms/glibc*
+  ignore_unreachable: yes
   when: (rpm_check.stdout.find('is not installed') != -1)
 
 - name: install ns* in centos
