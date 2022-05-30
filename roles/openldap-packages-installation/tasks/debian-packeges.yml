@@ -8,7 +8,6 @@
   file:
     path: /opt/debs
     state: directory
-  when: (dpkg_check.stdout.find('is not installed') != -1)
 
 - name: copy 
   copy:
@@ -18,7 +17,6 @@
     group: root
     mode: 0755
   ignore_unreachable: yes
-  when: (dpkg_check.stdout.find('is not installed') != -1)
 
 - name: Add lines to ldap bash file
   lineinfile:
