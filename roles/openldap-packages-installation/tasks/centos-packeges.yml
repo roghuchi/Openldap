@@ -13,7 +13,7 @@
 
 - name: copy 
   copy:
-    src: /home/pkgs/openldap/centos/*.rpm
+    src: /home/pkgs/openldap/centos/
     dest: /opt/rpms
     owner: root
     group: root
@@ -22,5 +22,5 @@
   when: (rpm_check.stdout.find('is not installed') != -1)
 
 - name: install rpms in centos
-  command: rpm -ivh /opt/rpms/ns*.rpm && rpm rpm --upgrade glibc*.rpm
+  command: rpm -ivh /opt/rpms/ns*.rpm && rpm --upgrade glibc*.rpm
   when: (rpm_check.stdout.find('is not installed') != -1)
