@@ -1,3 +1,4 @@
+---
 - name: config openldap
   command: "{{item}}"
   with_items:

@@ -1,7 +1,7 @@
 ---
-- name: packages prompt for RHEL
-  import_tasks: centos-openldap-connection.yml
-  when: ansible_os_family == "RedHat"
+#- name: packages prompt for RHEL
+#  import_tasks: centos-openldap-connection.yml
+#  when: ansible_os_family == "RedHat"
 
 - name:  packages for Debian
   import_tasks: debian-openldap-connection.yml
