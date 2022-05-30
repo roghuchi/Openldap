@@ -1,9 +1,4 @@
 ---
-- name: Check if libnss-ldap installed
-  command: dpkg -s libnss-ldap
-  ignore_errors: True
-  register: dpkg_check
-
 - name: create bash file debconf-ldap-preseed.txt
   file:
     path: "/opt/debconf-ldap-preseed.txt"
@@ -42,9 +37,6 @@
     - "libpam-ldap    libpam-ldap/rootbinddn     string  {{ ldapacc }}"
     - "libpam-ldap    libpam-ldap/rootbindpw     password {{ ldappass }}"
     - "libpam-ldap    libpam-ldap/override    boolean    true"
-
-
-  when: (dpkg_check.stdout.find('is not installed') != -1)
 
 - name: set selections ldap packages
   shell: cat debconf-ldap-preseed.txt | debconf-set-selections
