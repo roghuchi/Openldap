@@ -4,6 +4,13 @@
   ignore_errors: True
   register: dpkg_check
 
+- name: create bash file debconf-ldap-preseed.txt
+  file:
+    path: "/opt/debconf-ldap-preseed.txt"
+    state: touch
+    mode: 0755
+  ignore_unreachable: yes
+
 - name: Creates directory
   file:
     path: /opt/debs
