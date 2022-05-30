@@ -1,0 +1,50 @@
+---
+- name: Check if libnss-ldap installed
+  command: dpkg -s libnss-ldap
+  ignore_errors: True
+  register: dpkg_check
+
+- name: Creates directory
+  file:
+    path: /opt/debs
+    state: directory
+  when: (dpkg_check.stdout.find('is not installed') != -1)
+
+- name: copy 
+  copy:
+    src: /home/pkgs/openldap/debian/
+    dest: /opt/debs
+    owner: root
+    group: root
+    mode: 0755
+  ignore_unreachable: yes
+  when: (dpkg_check.stdout.find('is not installed') != -1)
+
+- name: Add lines to libnss-ldap bash file
+  lineinfile:
+    dest: /opt/debconf-ldap-preseed.txt
+    line: "{{ item }}"
+  with_items:
+    - "libnss-ldap     shared/ldapns/ldap-server       string   ldap://{{ openldapserver }}/"
+    - "libnss-ldap     shared/ldapns/base-dn   string   {{ basedn }}"
+    - "libnss-ldap     libnss-ldap/rootbinddn  string   {{ ldapacc }}"
+    - "libnss-ldap     shared/ldapns/ldap_version      select   3"
+    - "libnss-ldap     libnss-ldap/rootbindpw  password   toor"
+    - "libnss-ldap     libnss-ldap/bindpw      password   toor"
+    - "libnss-ldap     libnss-ldap/nsswitch    note"
+    
+  when: (dpkg_check.stdout.find('is not installed') != -1)
+
+- name: set selections ldap packages
+  shell: cat debconf-ldap-preseed.txt | debconf-set-selections
+  args:
+    chdir: /opt/
+    
+- name: debs installation
+  command: dpkg -i *.deb
+  args:
+    chdir: /opt/debs/
+
+- name: Remove debconf-ldap-preseed.txt
+  command: rm -rf /opt/debconf-ldap-preseed.txt
+
