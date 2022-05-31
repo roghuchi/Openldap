@@ -1,0 +1,38 @@
+---
+- name: check if ldap script file exists
+  stat: 
+    path: /opt/sshkeyquery.sh
+  register: ldapscript_file
+
+- name: create bash file sshkeyquery.sh
+  file:
+    path: "/opt/sshkeyquery.sh"
+    state: touch
+    mode: 0755
+  ignore_unreachable: yes
+
+- name: Add lines to sshkeyquery.sh
+  lineinfile:
+    dest: /opt/sshkeyquery.sh
+    line: "{{ item }}"
+  with_items:
+    - "#!/bin/bash"
+    - "ldapsearch -x -D \"cn=admin,dc=example,dc=com\" -w \"{{ ldappass }}\" -p 389 -h {{ openldapserver }} -b \"{{ basedn }}\" -s sub \"(uid=$1)\" sshPublicKey | sed -n '/^ /{H;d};/sshPublicKey:/x;$g;s/\\n *//g;s/sshPublicKey: //gp'"
+  when: ldapscript_file.stat.exists == False
+
+
+- name: config sshd
+  shell: "{{item}}"
+  with_items:
+     - grep -qxF 'AuthorizedPrincipalsFile %h/.ssh/authorized_keys' /etc/ssh/sshd_config || echo 'AuthorizedPrincipalsFile %h/.ssh/authorized_keys' >> /etc/ssh/sshd_config
+     - grep -qxF 'AuthorizedKeysCommand /opt/sshkeyquery.sh' /etc/ssh/sshd_config || echo 'AuthorizedKeysCommand /opt/sshkeyquery.sh' >> /etc/ssh/sshd_config
+     - grep -qxF 'AuthorizedKeysCommandUser nobody' /etc/ssh/sshd_config || echo 'AuthorizedKeysCommandUser nobody' >> /etc/ssh/sshd_config
+
+  ignore_unreachable: yes
+
+- name: sshd restart
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+    enabled: true
+  ignore_unreachable: yes
