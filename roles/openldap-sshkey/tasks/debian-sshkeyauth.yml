@@ -24,9 +24,9 @@
 - name: config sshd
   shell: "{{item}}"
   with_items:
-     - sed -i 's/#AuthorizedPrincipalsFile.*/AuthorizedPrincipalsFile %h\/\.ssh\/authorized_keys\//' /etc/ssh/sshd_config
-     - sed -i 's/#AuthorizedKeysCommand.*/AuthorizedKeysCommand \/opt\/sshkeyquery.sh/' /etc/ssh/sshd_config
-     - sed -i 's/#AuthorizedKeysCommandUser.*/AuthorizedKeysCommandUser nobody/' /etc/ssh/sshd_config
+     - grep -qxF 'AuthorizedPrincipalsFile %h/.ssh/authorized_keys' /etc/ssh/sshd_config || echo 'AuthorizedPrincipalsFile %h/.ssh/authorized_keys' >> /etc/ssh/sshd_config
+     - grep -qxF 'AuthorizedKeysCommand /opt/sshkeyquery.sh' /etc/ssh/sshd_config || echo 'AuthorizedKeysCommand /script/sshkeyquery.sh' >> /etc/ssh/sshd_config
+     - grep -qxF 'AuthorizedKeysCommandUser nobody' /etc/ssh/sshd_config || echo 'AuthorizedKeysCommandUser nobody' >> /etc/ssh/sshd_config
 
   ignore_unreachable: yes
 
