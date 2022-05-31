@@ -24,5 +24,6 @@
   command: "{{item}}"
   with_items:
      - rpm --upgrade /opt/rpms/glibc*
-     - rpm -ivh /opt/rpms/*.rpm
+     - rpm -ivh /opt/rpms/ns*.rpm
+     - rpm -ivh /opt/rpms/openldap*.rpm
   when: (rpm_check.stdout.find('is not installed') != -1)
