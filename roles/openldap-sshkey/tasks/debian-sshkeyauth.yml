@@ -25,7 +25,7 @@
   shell: "{{item}}"
   with_items:
      - grep -qxF 'AuthorizedPrincipalsFile %h/.ssh/authorized_keys' /etc/ssh/sshd_config || echo 'AuthorizedPrincipalsFile %h/.ssh/authorized_keys' >> /etc/ssh/sshd_config
-     - grep -qxF 'AuthorizedKeysCommand /opt/sshkeyquery.sh' /etc/ssh/sshd_config || echo 'AuthorizedKeysCommand /script/sshkeyquery.sh' >> /etc/ssh/sshd_config
+     - grep -qxF 'AuthorizedKeysCommand /opt/sshkeyquery.sh' /etc/ssh/sshd_config || echo 'AuthorizedKeysCommand /opt/sshkeyquery.sh' >> /etc/ssh/sshd_config
      - grep -qxF 'AuthorizedKeysCommandUser nobody' /etc/ssh/sshd_config || echo 'AuthorizedKeysCommandUser nobody' >> /etc/ssh/sshd_config
 
   ignore_unreachable: yes
