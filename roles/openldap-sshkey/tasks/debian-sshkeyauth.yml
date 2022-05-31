@@ -1,4 +1,9 @@
 ---
+- name: check if ldap script file exists
+  stat: 
+    path: /opt/sshkeyquery.sh
+  register: ldapscript_file
+
 - name: create bash file sshkeyquery.sh
   file:
     path: "/opt/sshkeyquery.sh"
@@ -13,6 +18,8 @@
   with_items:
     - "#!/bin/bash"
     - "ldapsearch -x -D \"cn=admin,dc=example,dc=com\" -w \"{{ ldappass }}\" -p 389 -h {{ openldapserver }} -b \"{{ basedn }}\" -s sub \"(uid=$1)\" sshPublicKey | sed -n '/^ /{H;d};/sshPublicKey:/x;$g;s/\\n *//g;s/sshPublicKey: //gp'"
+  when: ldapscript_file.stat.exists == False
+
 
 - name: config sshd
   shell: "{{item}}"
