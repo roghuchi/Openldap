@@ -14,8 +14,11 @@
     state: restarted
     enabled: true
 
-- name: config sshd pam
-  shell: grep -qxF 'session required pam_mkhomedir.so skel=/etc/skel umask=0022' /etc/pam.d/sshd || echo 'session required pam_mkhomedir.so skel=/etc/skel umask=0022' >> /etc/pam.d/sshd
+- name: config sshd pam and make sudoers
+  shell: "{{item}}"
+  with_items:
+    - "grep -qxF 'session required pam_mkhomedir.so skel=/etc/skel umask=0022' /etc/pam.d/common-session || echo 'session required pam_mkhomedir.so skel=/etc/skel umask=0022' >> /etc/pam.d/common-session"
+    - "grep -qxF '%{{ sudoersgp }} ALL=(ALL:ALL) ALL' /etc/sudoers || echo '%{{ sudoersgp }} ALL=(ALL:ALL) ALL' >> /etc/sudoers"
   ignore_unreachable: yes
 
 - name: sshd restart
