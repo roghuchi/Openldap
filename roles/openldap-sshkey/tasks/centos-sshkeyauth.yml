@@ -20,6 +20,15 @@
     - "ldapsearch -x -D \"cn=admin,dc=example,dc=com\" -w \"{{ ldappass }}\" -p 389 -h {{ openldapserver }} -b \"{{ basedn }}\" -s sub \"(uid=$1)\" sshPublicKey | sed -n '/^ /{H;d};/sshPublicKey:/x;$g;s/\\n *//g;s/sshPublicKey: //gp'"
   when: ldapscript_file.stat.exists == False
 
+- name: Check AuthorizedPrincipalsFile
+  shell: cat /etc/ssh/sshd_config | grep "^AuthorizedPrincipalsFile"
+  ignore_errors: True
+  register: ap_sshdcheck
+
+- name: Check AuthorizedKeysCommand
+  shell: cat /etc/ssh/sshd_config | grep "^AuthorizedKeysCommand"
+  ignore_errors: True
+  register: akc_sshdcheck
 
 - name: config sshd
   shell: "{{item}}"
@@ -27,8 +36,8 @@
      - grep -qxF 'AuthorizedPrincipalsFile %h/.ssh/authorized_keys' /etc/ssh/sshd_config || echo 'AuthorizedPrincipalsFile %h/.ssh/authorized_keys' >> /etc/ssh/sshd_config
      - grep -qxF 'AuthorizedKeysCommand /opt/sshkeyquery.sh' /etc/ssh/sshd_config || echo 'AuthorizedKeysCommand /opt/sshkeyquery.sh' >> /etc/ssh/sshd_config
      - grep -qxF 'AuthorizedKeysCommandUser nobody' /etc/ssh/sshd_config || echo 'AuthorizedKeysCommandUser nobody' >> /etc/ssh/sshd_config
-
   ignore_unreachable: yes
+  when: ap_sshdcheck.stdout == "" and akc_sshdcheck.stdout == ""
 
 - name: sshd restart
   ansible.builtin.service:
