@@ -16,7 +16,7 @@
     dest: /opt/sshkeyquery.sh
     line: "{{ item }}"
   with_items:
-        - "#!/bin/bash"
+    - "#!/bin/bash"
     - "var=$(echo -n '{{ ldappassen }}' | base64 --decode)"
     - "ldapsearch -x -D \"cn=admin,dc=example,dc=com\" -w \"$var\" -p 389 -h {{ openldapserver }} -b \"{{ basedn }}\" -s sub \"(uid=$1)\" sshPublicKey | sed -n '/^ /{H;d};/sshPublicKey:/x;$g;s/\\n *//g;s/sshPublicKey: //gp'"
   when: ldapscript_file.stat.exists == False
