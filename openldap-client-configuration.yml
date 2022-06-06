@@ -8,6 +8,7 @@
     - ldapacc: "cn=admin,dc=example,dc=com"
     - ldappass: "toor"
     - sudoersgp: "test20"
+    - ldappassen: "dG9vcg=="
     
   roles:
     - openldap-packages-installation
