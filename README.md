@@ -226,3 +226,12 @@ Then add the line in this file for make home directory for the ldap users :
 Then restart sshd service
 
 > service sshd restart
+
+
+## Commands
+
+> ldapsearch -x -D cn=admin,dc=test,dc=com -w [pass] -p 389 -h localhost
+
+> ldapadd -x -D cn=admin,dc=test,dc=com -w  [pass] -p 389 -h localhost -f sshPublicKey.ldif
+
+> ldapmodify -x -a -D cn=admin,dc=test,dc=com -w [pass] -p 389 -h localhost -f /etc/ldap/schema/ppolicy.ldif
