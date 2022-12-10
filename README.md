@@ -235,3 +235,6 @@ Then restart sshd service
 > ldapadd -x -D cn=admin,dc=test,dc=com -w  [pass] -p 389 -h localhost -f sshPublicKey.ldif
 
 > ldapmodify -x -a -D cn=admin,dc=test,dc=com -w [pass] -p 389 -h localhost -f /etc/ldap/schema/ppolicy.ldif
+
+## LSC configuration
+http://lsc-project.org/
