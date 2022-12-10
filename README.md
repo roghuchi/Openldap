@@ -4,14 +4,12 @@
 ### server side
 configure FQDN hostname for your server
 
-sudo nano /etc/hosts
+> sudo nano /etc/hosts
 
 192.168.56.111   ldap.example.com
 
 
 sudo hostnamectl set-hostname ldap.example.com --static
-
-
 
 
 
