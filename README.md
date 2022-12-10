@@ -17,6 +17,8 @@ configure FQDN hostname for your server
 Update Debian server
 
 > sudo apt -y update
+
+
 > sudo apt -y upgrade
 
 
@@ -24,6 +26,8 @@ Update Debian server
 Install OpenLDAP on Debian 11 / Debian 10 Linux
 
 > sudo apt -y install slapd ldap-utils
+
+
 > sudo dpkg-reconfigure slapd
 
 
@@ -112,6 +116,8 @@ memberUid: jmutai
 Download the latest release of ldap account manager deb package
 
 > wget http://prdownloads.sourceforge.net/lam/ldap-account-manager_7.7-1_all.deb
+
+
 > sudo apt install -f ./ldap-account-manager_7.7-1_all.deb
 
 
@@ -127,6 +133,8 @@ http://192.168.56.111//lam
 ### client side Debian 
 
 > sudo apt update
+
+
 > sudo apt install libnss-ldap libpam-ldap ldap-utils
 
 Answer these questions:
@@ -184,6 +192,8 @@ Run this command and select all parameters:
 ### client side Centos
 
 > sudo yum update
+
+
 
 > sudo yum install -y nss-pam-ldapd nscd openldap-clients
 
