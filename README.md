@@ -1,7 +1,7 @@
 # Openldap
 
-#Installation
-server side
+## Installation
+### server side
 configure FQDN hostname for your server
 
 sudo nano /etc/hosts
