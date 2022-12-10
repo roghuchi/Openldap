@@ -48,7 +48,7 @@ Add base dn for Users and Groups
 
 > nano basedn.ldif
 
-dn: ou=people,dc=example,dc=com
+dn: ou=people,dc=example,dc=com 
 objectClass: organizationalUnit
 ou: people
 dn: ou=groups,dc=example,dc=com
