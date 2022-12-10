@@ -44,12 +44,12 @@ Add base dn for Users and Groups
 
 > nano basedn.ldif
 
-> dn: ou=people,dc=example,dc=com
-> objectClass: organizationalUnit
-> ou: people
-> dn: ou=groups,dc=example,dc=com
-> objectClass: organizationalUnit
-> ou: groups
+dn: ou=people,dc=example,dc=com
+objectClass: organizationalUnit
+ou: people
+dn: ou=groups,dc=example,dc=com
+objectClass: organizationalUnit
+ou: groups
 
 
 apply basedn.ldif
@@ -74,17 +74,17 @@ Create ldif file for adding users
 
 > nano ldapusers.ldif
 
-> dn: uid=jmutai,ou=people,dc=example,dc=com
-> objectClass: inetOrgPerson
-> objectClass: posixAccount
-> objectClass: shadowAccount
-> cn: Josphat
-> sn: Mutai
-> userPassword: {SSHA}5D94oKzVyJYzkCq21LhXDZFNZpPQD9uE
-> loginShell: /bin/bash
-> homeDirectory: /home/jmutai
-> uidNumber: 3000
-> gidNumber: 300
+dn: uid=jmutai,ou=people,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: Josphat
+sn: Mutai
+userPassword: {SSHA}5D94oKzVyJYzkCq21LhXDZFNZpPQD9uE
+loginShell: /bin/bash
+homeDirectory: /home/jmutai
+uidNumber: 3000
+gidNumber: 300
 
 
 apply ldapusers.ldif
@@ -96,11 +96,11 @@ Create ldif file for adding group
 
 > nano ldapgroups.ldif
 
-> dn: cn=jmutai,ou=groups,dc=example,dc=com
-> objectClass: posixGroup
-> cn: jmutai
-> gidNumber: 3000
-> memberUid: jmutai
+dn: cn=jmutai,ou=groups,dc=example,dc=com
+objectClass: posixGroup
+cn: jmutai
+gidNumber: 3000
+memberUid: jmutai
 
 
 > sudo ldapadd -x -D cn=admin,dc=example,dc=com -W -f ldapgroups.ldif
@@ -143,33 +143,33 @@ LDAP administrative password? admin password (smile)
 
 First edit nsswitch : (/etc/nsswitch.conf)
 
-> passwd:            compat ldap
-> group:               compat ldap
-> shadow:           compat ldap
+passwd:            compat ldap
+group:               compat ldap
+shadow:           compat ldap
 
 Then edit these files :
 
 /etc/pam.d/common-account
 
-> account sufficient pam_unix.so
-> account required pam_ldap.so
+account sufficient pam_unix.so
+account required pam_ldap.so
 
 /etc/pam.d/common-auth
 
-> auth sufficient pam_unix.so nullok_secure
-> auth required pam_ldap.so use_first_pass
-> auth required pam_permit.so
+auth sufficient pam_unix.so nullok_secure
+auth required pam_ldap.so use_first_pass
+auth required pam_permit.so
 
 
  /etc/pam.d/common-password
 
-> password sufficient pam_unix.so nullok obsecure md5
-> password required pam_ldap.so
+password sufficient pam_unix.so nullok obsecure md5
+password required pam_ldap.so
 
 /etc/pam.d/common-session
 
-> session required pam_unix.so
-> session required pam_mkhomedir.so skel=/etc/skel umask=0022
+session required pam_unix.so
+session required pam_mkhomedir.so skel=/etc/skel umask=0022
 
 
 Then restart nscd service
@@ -184,6 +184,7 @@ Run this command and select all parameters:
 ### client side Centos
 
 > sudo yum update
+
 > sudo yum install -y nss-pam-ldapd nscd openldap-clients
 
 
@@ -198,9 +199,9 @@ also add these lines in this file:
 > vi /etc/nslcd.conf
 
 
-> ldap_version 3
-> binddn cn=admin,dc=example,dc=com
-> bindpw [admin password]
+ldap_version 3
+binddn cn=admin,dc=example,dc=com
+bindpw [admin password]
 
 Then restart nscd service
 
