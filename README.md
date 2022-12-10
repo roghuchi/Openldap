@@ -1,1 +1,1 @@
-# Openldap-Client-Configuration
+# Openldap
